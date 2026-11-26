@@ -50,6 +50,7 @@ from app.services.geo_algeria import WILAYAS, WILAYA_BY_CODE, estimate_delivery_
 from app.services.multilingual_search import expand_multilingual_query
 from app.services.optimizer import classify_tier_recommendations, compute_pareto_front
 from app.services.scoring import compute_product_scores
+from app.services.web_reach import read_public_url, run_channel_doctor, search_live_web
 
 settings = get_settings()
 rate_limiter = InMemoryRateLimiter(settings.api_rate_limit_per_minute)
@@ -557,6 +558,30 @@ async def extract_social_post(payload: dict, request: Request):
     if source_url:
         validate_external_url(source_url)
     return extract_social_listing_metadata(raw_text, source_url)
+
+
+@app.get("/api/v1/web-reach/search")
+async def web_reach_search(
+    request: Request,
+    q: str = Query(..., min_length=2, max_length=200),
+    wilaya_code: str | None = None,
+    platform: str | None = None,
+    limit: int = Query(default=8, ge=1, le=15),
+):
+    rate_limiter.check(request)
+    return search_live_web(q, wilaya_code=wilaya_code, platform=platform, limit=limit)
+
+
+@app.post("/api/v1/web-reach/read")
+async def web_reach_read(payload: dict, request: Request):
+    rate_limiter.check(request)
+    url = str(payload.get("url", ""))
+    return read_public_url(url)
+
+
+@app.get("/api/v1/web-reach/doctor")
+async def web_reach_doctor():
+    return run_channel_doctor()
 
 
 @app.websocket("/ws/search/{job_id}")

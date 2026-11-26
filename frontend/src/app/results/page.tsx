@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Bookmark, SlidersHorizontal, Factory, MapPin, PhoneCall, CheckCircle2 } from "lucide-react";
+import { Bookmark, SlidersHorizontal, Factory, MapPin, PhoneCall, CheckCircle2, Globe, ExternalLink } from "lucide-react";
 import { apiFetch, Product, Seller } from "@/lib/api";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -27,6 +27,9 @@ function ResultsInner() {
   const [maxPrice, setMaxPrice] = useState("");
   const [documentedOnly, setDocumentedOnly] = useState(false);
   const [savedMsg, setSavedMsg] = useState("");
+  const [liveWebItems, setLiveWebItems] = useState<any[]>([]);
+  const [liveWebLoading, setLiveWebLoading] = useState(false);
+  const [liveWebError, setLiveWebError] = useState("");
 
   useEffect(() => {
     apiFetch<{ wilayas: WilayaOption[] }>("/api/v1/geo/wilayas")
@@ -70,6 +73,24 @@ function ResultsInner() {
       }),
     });
     setSavedMsg("تم حفظ البحث بنجاح!");
+  };
+
+  const runLiveWebSearch = async () => {
+    setLiveWebLoading(true);
+    setLiveWebError("");
+    try {
+      const params = new URLSearchParams();
+      params.set("q", q || "صالون أريكة D36");
+      if (wilayaCode) params.set("wilaya_code", wilayaCode);
+      if (sourcePlatform) params.set("platform", sourcePlatform);
+      const res = await apiFetch<{ ok: boolean; items: any[]; error?: { message: string } }>(`/api/v1/web-reach/search?${params.toString()}`);
+      setLiveWebItems(res.items || []);
+      if (!res.ok && res.error) setLiveWebError(res.error.message);
+    } catch {
+      setLiveWebError("تعذر الاتصال بمحرك البحث الخارجي حالياً.");
+    } finally {
+      setLiveWebLoading(false);
+    }
   };
 
   const selectedWilayaObj = wilayas.find((w) => w.code === wilayaCode);
@@ -146,11 +167,54 @@ function ResultsInner() {
           تطبيق الفلاتر
         </button>
 
-        <label className="col-span-full flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" checked={documentedOnly} onChange={(e) => setDocumentedOnly(e.target.checked)} />
-          <span>إظهار العروض ذات كثافة الرغوة الموثقة بشهادة فقط</span>
-        </label>
+        <div className="col-span-full flex flex-wrap items-center justify-between gap-3 pt-1">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={documentedOnly} onChange={(e) => setDocumentedOnly(e.target.checked)} />
+            <span>إظهار العروض ذات كثافة الرغوة الموثقة بشهادة فقط</span>
+          </label>
+          <button
+            type="button"
+            onClick={runLiveWebSearch}
+            disabled={liveWebLoading}
+            className="rounded-lg bg-navy-900 dark:bg-wood-500 text-ivory-50 font-bold px-4 py-2 inline-flex items-center gap-1.5"
+          >
+            <Globe className="w-3.5 h-3.5" />
+            {liveWebLoading ? "جاري البحث في الإنترنت..." : "بحث مباشر في الإنترنت والمنصات"}
+          </button>
+        </div>
       </div>
+
+      {(liveWebItems.length > 0 || liveWebError) && (
+        <section className="rounded-2xl border border-wood-500/30 bg-white dark:bg-navy-900 p-5 space-y-3">
+          <h2 className="font-bold text-base flex items-center gap-2">
+            <Globe className="w-5 h-5 text-emerald-600" />
+            نتائج البحث المباشر من الإنترنت ({liveWebItems.length})
+          </h2>
+          {liveWebError && <p className="text-xs text-amber-600">{liveWebError}</p>}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            {liveWebItems.map((it, idx) => (
+              <a
+                key={idx}
+                href={it.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl border border-wood-500/20 p-3.5 hover:border-emerald-500 transition flex flex-col gap-1.5"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <strong className="text-sm text-emerald-700 dark:text-emerald-400 line-clamp-1">{it.title}</strong>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0 opacity-70" />
+                </div>
+                <p className="opacity-80 line-clamp-2">{it.snippet}</p>
+                <div className="flex flex-wrap gap-2 text-[11px] opacity-75">
+                  <span>المنصة: {it.platform}</span>
+                  {it.extracted_price_dzd && <span>· السعر المستخرج: {it.extracted_price_dzd.toLocaleString("fr-DZ")} دج</span>}
+                  {it.foam_density_claimed && <span>· الرغوة: {it.foam_density_claimed}</span>}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
       {wilayaCode && (
         <section className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-5 space-y-3">

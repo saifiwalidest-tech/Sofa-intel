@@ -52,3 +52,10 @@ def test_health_and_core_endpoints():
         assert r_social.status_code == 200
         assert r_social.json()["platform"] == "facebook_marketplace"
         assert r_social.json()["extracted_price_dzd"] == 120000
+
+        r_doc = client.get("/api/v1/web-reach/doctor")
+        assert r_doc.status_code == 200
+        assert len(r_doc.json()["channels"]) >= 5
+
+        r_read_ssrf = client.post("/api/v1/web-reach/read", json={"url": "http://127.0.0.1:8001/health"})
+        assert r_read_ssrf.status_code == 400
