@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
+  <rect width="400" height="240" rx="16" fill="#0B132B"/>
+  <rect x="45" y="95" width="310" height="75" rx="14" fill="#1C2541" stroke="#C89B6E" stroke-width="3"/>
+  <rect x="45" y="75" width="95" height="115" rx="14" fill="#2B3A67" stroke="#C89B6E" stroke-width="3"/>
+  <rect x="145" y="105" width="200" height="55" rx="8" fill="#2B3A67"/>
+  <rect x="60" y="172" width="12" height="18" rx="3" fill="#C89B6E"/>
+  <rect x="330" y="172" width="12" height="18" rx="3" fill="#C89B6E"/>
+  <text x="200" y="42" text-anchor="middle" fill="#FAF9F6" font-size="14" font-family="sans-serif">SOFA INTEL DZ — L-SHAPE</text>
+</svg>
