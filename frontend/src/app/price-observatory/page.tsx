@@ -15,7 +15,7 @@ export default function PriceObservatoryPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">مرصد الأسعار (AGENT 12 — بالدينار الجزائري)</h1>
+      <h1 className="text-2xl font-bold">مرصد الأسعار (بالدينار الجزائري)</h1>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="rounded-2xl border border-wood-500/25 bg-white dark:bg-navy-900 p-4">
           <div className="text-xs opacity-70">الوسيط السعري</div>

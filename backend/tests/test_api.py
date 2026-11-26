@@ -35,4 +35,20 @@ def test_health_and_core_endpoints():
 
         r_agents = client.get("/api/v1/agents/status")
         assert r_agents.status_code == 200
-        assert r_agents.json()["total_agents"] == 18
+        assert r_agents.json()["total_agents"] == 28
+
+        r_mfg = client.get("/api/v1/manufacturers")
+        assert r_mfg.status_code == 200
+        wilaya_codes = {s["wilaya_code"] for s in r_mfg.json()["items"]}
+        assert len(wilaya_codes) == 58
+
+        r_social = client.post(
+            "/api/v1/social/extract",
+            json={
+                "text": "صالون زاوية L في وهران رغوة D36 خشب الزان بـ 12 مليون سنتيم قماش anti-tache",
+                "source_url": "https://www.facebook.com/marketplace/item/123",
+            },
+        )
+        assert r_social.status_code == 200
+        assert r_social.json()["platform"] == "facebook_marketplace"
+        assert r_social.json()["extracted_price_dzd"] == 120000

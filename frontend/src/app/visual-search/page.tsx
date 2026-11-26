@@ -26,7 +26,7 @@ export default function VisualSearchPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold flex items-center gap-2">
         <ImageIcon className="w-6 h-6 text-emerald-500" />
-        البحث عن أريكة باستخدام صورة (AGENT 11)
+        البحث عن أريكة باستخدام صورة
       </h1>
       <div className="rounded-2xl border border-wood-500/25 bg-white dark:bg-navy-900 p-5 grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
         <input

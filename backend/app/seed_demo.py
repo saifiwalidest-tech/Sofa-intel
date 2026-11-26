@@ -8,6 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database import FieldProvenance, PriceHistory, Product, Seller
+from app.services.geo_algeria import WILAYAS
 from app.services.scoring import compute_product_scores
 
 
@@ -113,6 +114,83 @@ def seed_demo_data_if_empty(db: Session) -> None:
 
     for s in sellers_data:
         db.add(Seller(**s))
+
+    existing_wilayas = {s["wilaya_code"] for s in sellers_data}
+    social_channels = [
+        ("facebook_marketplace", "https://www.facebook.com/marketplace/"),
+        ("facebook_page", "https://www.facebook.com/search/pages/?q=salon%20algerie"),
+        ("instagram_business", "https://www.instagram.com/explore/tags/salon_algerie/"),
+        ("tiktok_shop", "https://www.tiktok.com/tag/salonalgerien"),
+        ("ouedkniss", "https://www.ouedkniss.com/meubles-salon-algerie"),
+    ]
+    sofa_cycle = [
+        ("straight", "D35", "Pin (صنوبر)", "Velours", "كنبة 3 مقاعد عصرية", 78000, "/images/sofa-l-navy.svg"),
+        ("l_shape", "D36", "Hêtre (زان)", "Tissu anti-tache", "صالون زاوية L عائلي", 118000, "/images/sofa-l-emerald.svg"),
+        ("turkish", "D36", "Hêtre (زان)", "Chenille", "صالون تركي فاخر", 132000, "/images/sofa-turkish.svg"),
+        ("moroccan", "D40", "Chêne (بلوط)", "Velours", "صالون مغربي سدادر", 142000, "/images/sofa-modular.svg"),
+        ("sofa_bed", "D35", "Pin (صنوبر مدعم)", "Microfibre", "كنبة سرير عملية", 84000, "/images/sofa-bed.svg"),
+    ]
+
+    extra_products = []
+    for idx, w in enumerate(WILAYAS):
+        if w["code"] in existing_wilayas:
+            continue
+        sid = f"demo-seller-w{w['code']}"
+        commune = w["communes"][0] if w["communes"] else w["name_fr"]
+        s_dict = {
+            "id": sid,
+            "name": f"[DEMO] ورشة ومعرض {w['name_ar']} للأثاث — {commune}",
+            "seller_type": "direct_factory" if idx % 2 == 0 else "artisan_workshop",
+            "wilaya_code": w["code"],
+            "wilaya_name": w["name_ar"],
+            "commune": commune,
+            "business_address": f"حي المعارض الصناعي، {commune}، {w['name_ar']} (DEMO)",
+            "public_contact": f"contact@demo-sofa-w{w['code']}.dz",
+            "latitude": w["lat"],
+            "longitude": w["lon"],
+            "has_written_warranty": idx % 2 == 0,
+            "cash_on_delivery": True,
+            "provides_invoice": idx % 3 == 0,
+            "custom_orders_supported": True,
+            "trust_score": 78.0 + (idx % 12),
+            "is_demo": True,
+        }
+        sellers_data.append(s_dict)
+        db.add(Seller(**s_dict))
+
+        stype, fdens, wood, fab, label_ar, price, img = sofa_cycle[idx % len(sofa_cycle)]
+        src_name, src_url = social_channels[idx % len(social_channels)]
+        extra_products.append({
+            "id": f"demo-sofa-w{w['code']}",
+            "seller_id": sid,
+            "title": f"[DEMO] {label_ar} — {w['name_ar']} ({fdens})",
+            "description": f"عرض مرجعي في ولاية {w['name_ar']} ({commune}) منشور عبر {src_name} — رغوة {fdens} وهيكل {wood}.",
+            "sofa_type": stype,
+            "condition": "custom" if idx % 2 == 0 else "new",
+            "images": [img],
+            "seats_count": 5 if stype in ("l_shape", "turkish", "moroccan") else 3,
+            "dimensions_cm": "260 x 170 x 85",
+            "foam_type": "Polyurethane High Density",
+            "foam_density_claimed": fdens,
+            "foam_density_documented": idx % 2 == 0,
+            "foam_firmness": "متوسطة إلى صلبة",
+            "foam_thickness_cm": 15.0,
+            "wood_type": wood,
+            "assembly_method": "Assemblage renforcé" if idx % 2 == 0 else None,
+            "suspension_type": "Ressorts Nosag" if idx % 2 == 0 else "Sangles élastiques renforcées",
+            "fabric_type": fab,
+            "fabric_properties": ["anti-tache", "سهل التنظيف"],
+            "color": "كحلي داكن",
+            "original_price_dzd": price + 8000,
+            "current_price_dzd": price,
+            "price_status": "confirmed_dzd",
+            "warranty_months": 24 if idx % 2 == 0 else 12,
+            "delivery_available": True,
+            "delivery_cost_dzd": 3000,
+            "primary_source_name": src_name,
+            "source_url": src_url,
+            "days_ago": (idx % 10) + 1,
+        })
 
     products_data = [
         {
@@ -304,6 +382,7 @@ def seed_demo_data_if_empty(db: Session) -> None:
     ]
 
     seller_map = {s["id"]: s for s in sellers_data}
+    products_data.extend(extra_products)
 
     for p in products_data:
         s = seller_map[p["seller_id"]]

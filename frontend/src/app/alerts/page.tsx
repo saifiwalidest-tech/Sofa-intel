@@ -23,7 +23,7 @@ export default function AlertsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold flex items-center gap-2"><Bell className="w-6 h-6 text-emerald-500" /> التنبيهات الذكية (AGENT 16)</h1>
+      <h1 className="text-2xl font-bold flex items-center gap-2"><Bell className="w-6 h-6 text-emerald-500" /> التنبيهات المخصصة</h1>
       <form onSubmit={create} className="rounded-2xl border border-wood-500/25 bg-white dark:bg-navy-900 p-5 flex flex-col sm:flex-row gap-3 text-xs">
         <input value={label} onChange={(e) => setLabel(e.target.value)} className="flex-1 rounded-lg border border-wood-500/30 bg-transparent px-3 py-2" />
         <input type="number" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="rounded-lg border border-wood-500/30 bg-transparent px-3 py-2" placeholder="أقصى سعر دج" />

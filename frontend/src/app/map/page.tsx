@@ -31,7 +31,7 @@ export default function AlgeriaMapPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">خريطة عروض الجزائر وتقدير التوصيل (AGENT 07)</h1>
+          <h1 className="text-2xl font-bold">خريطة عروض الجزائر وتقدير التوصيل</h1>
           <p className="text-xs opacity-75">58 ولاية — حساب المسافة وتقدير تكلفة النقل من المصنع إلى ولايتك</p>
         </div>
         <select

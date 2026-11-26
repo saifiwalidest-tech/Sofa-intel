@@ -113,7 +113,7 @@ def build_consultant_response(intent: dict, candidates: list[dict]) -> dict:
     if intent.get("wilaya_name"):
         parts.append(f"الولاية: {intent['wilaya_name']}")
 
-    summary = "تم تحليل طلبك وتفعيل الوكلاء (06, 07, 08, 09, 10, 12, 13, 15). " + (" | ".join(parts) if parts else "")
+    summary = "تم تحليل طلبك ومطابقته مع المواصفات الهندسية وأسعار السوق والتوصيل: " + (" | ".join(parts) if parts else "")
     if not top_picks:
         summary += " لم يتم العثور على عروض مطابقة تماماً حالياً."
     else:

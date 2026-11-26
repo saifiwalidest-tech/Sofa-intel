@@ -22,7 +22,7 @@ export default function HomePage() {
         <div className="max-w-3xl space-y-4">
           <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 text-emerald-400 px-3 py-1 text-xs font-semibold">
             <ShieldCheck className="w-4 h-4" />
-            نظام من 18 وكيل ذكاء اصطناعي · توثيق مصدر كل معلومة
+            بحث شامل في المنصات الاجتماعية والأسواق · توثيق مصدر كل معلومة
           </span>
           <h1 className="text-2xl sm:text-4xl font-extrabold leading-tight">
             اكتشف أفضل الأرائك والصالونات في الجزائر بالدليل الهندسي والسعر العادل

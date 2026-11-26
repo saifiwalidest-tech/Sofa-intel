@@ -7,7 +7,7 @@ import { Bot, Search } from "lucide-react";
 export default function SmartSearchPage() {
   const router = useRouter();
   const [query, setQuery] = useState("صالون زاوية رغوة D36 خشب الزان");
-  const [logs, setLogs] = useState<{ agent: string; progress: number; message: string }[]>([]);
+  const [logs, setLogs] = useState<{ stage?: string; progress: number; message: string }[]>([]);
   const [running, setRunning] = useState(false);
 
   const startOrchestratedSearch = () => {
@@ -31,9 +31,9 @@ export default function SmartSearchPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">محرك البحث الذكي متعدد اللغات</h1>
+      <h1 className="text-2xl font-bold">محرك البحث المتقدم متعدد اللغات</h1>
       <p className="text-sm opacity-80">
-        يفهم المرادفات الجزائرية (كنبة، صالون، موس 36، خشب الزان، salon en L، anti-tache) ويشغّل الوكلاء عبر WebSocket.
+        يبحث في إعلانات فيسبوك، إنستغرام، تيك توك وOuedkniss ويفهم المرادفات الجزائرية (كنبة، صالون، موس 36، خشب الزان، salon en L، anti-tache).
       </p>
 
       <div className="flex gap-2">
@@ -49,7 +49,7 @@ export default function SmartSearchPage() {
           className="rounded-xl bg-emerald-500 text-navy-950 font-bold px-6 py-3 text-sm inline-flex items-center gap-2"
         >
           <Search className="w-4 h-4" />
-          {running ? "جاري التحليل..." : "تشغيل الوكلاء"}
+          {running ? "جاري البحث..." : "بدء البحث"}
         </button>
       </div>
 
@@ -57,12 +57,12 @@ export default function SmartSearchPage() {
         <div className="rounded-2xl border border-wood-500/25 bg-navy-900 text-ivory-50 p-5 space-y-3">
           <div className="font-bold text-sm flex items-center gap-2 text-emerald-400">
             <Bot className="w-4 h-4" />
-            تقدم الوكلاء المباشر (WebSocket)
+            مراحل البحث والتحقق المباشر
           </div>
           {logs.map((l, i) => (
             <div key={i} className="text-xs flex items-center justify-between border-b border-white/10 pb-2">
               <span>
-                <strong className="text-wood-300">{l.agent}</strong>: {l.message}
+                <strong className="text-wood-300">{l.stage || "تحليل"}</strong>: {l.message}
               </span>
               <span className="text-emerald-400 font-mono">{l.progress}%</span>
             </div>

@@ -27,7 +27,7 @@ export default function ConsultantPage() {
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Sparkles className="w-6 h-6 text-emerald-500" />
-        <h1 className="text-2xl font-bold">مستشار الشراء الذكي (AGENT 17)</h1>
+        <h1 className="text-2xl font-bold">مستشار الشراء الشخصي</h1>
       </div>
       <p className="text-sm opacity-80">اكتب طلبك بالعربية، الدارجة الجزائرية، الفرنسية، أو الإنجليزية — يحول المستشار ميزانيتك (بما فيها السنتيم) إلى معايير بحث دقيقة.</p>
 

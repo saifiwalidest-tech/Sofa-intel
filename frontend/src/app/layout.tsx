@@ -4,8 +4,8 @@ import { AppProvider } from "@/components/AppContext";
 import { Shell } from "@/components/Shell";
 
 export const metadata: Metadata = {
-  title: "SOFA INTEL DZ — منصة استخبارات سوق الأرائك في الجزائر",
-  description: "منصة ذكية متعددة الوكلاء للبحث عن الأرائك والصالونات ومقارنتها في الجزائر — حقوق النشر © saifiwalid",
+  title: "SOFA INTEL DZ — محرك البحث ومقارنة الأرائك والصالونات في الجزائر",
+  description: "منصة متخصصة للبحث عن الأرائك والصالونات ومقارنة الجودة والأسعار في الجزائر — حقوق النشر © saifiwalid",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

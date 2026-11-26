@@ -23,6 +23,7 @@ function ResultsInner() {
   const [wilayaCode, setWilayaCode] = useState(sp.get("wilaya_code") || "");
   const [sofaType, setSofaType] = useState("");
   const [foamDensity, setFoamDensity] = useState("");
+  const [sourcePlatform, setSourcePlatform] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [documentedOnly, setDocumentedOnly] = useState(false);
   const [savedMsg, setSavedMsg] = useState("");
@@ -40,6 +41,7 @@ function ResultsInner() {
     if (activeWilaya) params.set("wilaya_code", activeWilaya);
     if (sofaType) params.set("sofa_type", sofaType);
     if (foamDensity) params.set("foam_density", foamDensity);
+    if (sourcePlatform) params.set("source_platform", sourcePlatform);
     if (maxPrice) params.set("max_price", maxPrice);
     if (documentedOnly) params.set("documented_only", "true");
 
@@ -120,6 +122,14 @@ function ResultsInner() {
           <option value="D40">D40</option>
           <option value="HR">HR</option>
           <option value="D35">D35</option>
+        </select>
+        <select value={sourcePlatform} onChange={(e) => setSourcePlatform(e.target.value)} className="rounded-lg border border-wood-500/30 bg-transparent px-3 py-2">
+          <option value="">كل المصادر والمنصات</option>
+          <option value="facebook_marketplace">Facebook Marketplace</option>
+          <option value="facebook_page">صفحات Facebook</option>
+          <option value="instagram">Instagram</option>
+          <option value="tiktok">TikTok</option>
+          <option value="ouedkniss">Ouedkniss</option>
         </select>
         <input
           type="number"

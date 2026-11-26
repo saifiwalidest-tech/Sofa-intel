@@ -7,10 +7,10 @@ import { useApp } from "./AppContext";
 
 const NAV_LINKS = [
   { href: "/", ar: "الرئيسية", fr: "Accueil", en: "Home" },
-  { href: "/search", ar: "البحث الذكي", fr: "Recherche", en: "Search" },
+  { href: "/search", ar: "البحث المتقدم", fr: "Recherche", en: "Search" },
   { href: "/results", ar: "العروض", fr: "Offres", en: "Results" },
   { href: "/compare", ar: "المقارنة", fr: "Comparer", en: "Compare" },
-  { href: "/consultant", ar: "المستشار الذكي", fr: "Consultant IA", en: "AI Consultant" },
+  { href: "/consultant", ar: "مستشار الشراء", fr: "Conseiller", en: "Advisor" },
   { href: "/quality-lab", ar: "مختبر الجودة", fr: "Labo Qualité", en: "Quality Lab" },
   { href: "/map", ar: "خريطة الجزائر", fr: "Carte DZ", en: "Map" },
   { href: "/manufacturers", ar: "المصانع", fr: "Fabricants", en: "Factories" },
@@ -86,7 +86,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>SOFA INTEL DZ — منصة استخبارات سوق الأثاث الجزائري (18 وكيل ذكاء اصطناعي)</span>
+            <span>SOFA INTEL DZ — منصة متخصصة للبحث ومقارنة جودة وأسعار الأرائك في الجزائر</span>
           </div>
           <div className="flex flex-wrap items-center gap-4">
             <Link href="/methodology" className="hover:text-emerald-400">المصادر والمنهجية</Link>

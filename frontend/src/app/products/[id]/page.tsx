@@ -39,24 +39,30 @@ export default function ProductDetailPage() {
           <p className="text-sm opacity-85">{product.description}</p>
 
           <div className="rounded-2xl border border-wood-500/25 bg-white dark:bg-navy-900 p-5 space-y-3">
-            <h2 className="font-bold text-base">تقرير الوكلاء المتخصصين (AGENT 00 – 15)</h2>
+            <h2 className="font-bold text-base">التحليل الفني والهندسي للمنتج</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="p-3 rounded-xl bg-ivory-100 dark:bg-navy-800">
-                <div className="font-bold text-emerald-600">AGENT 08 — الرغوة</div>
+                <div className="font-bold text-emerald-600">تحليل الرغوة</div>
                 <div>{agent_analysis.foam_analysis.summary}</div>
               </div>
               <div className="p-3 rounded-xl bg-ivory-100 dark:bg-navy-800">
-                <div className="font-bold text-emerald-600">AGENT 09 — الخشب والهيكل</div>
+                <div className="font-bold text-emerald-600">الخشب والهيكل</div>
                 <div>{agent_analysis.wood_analysis.summary}</div>
               </div>
               <div className="p-3 rounded-xl bg-ivory-100 dark:bg-navy-800">
-                <div className="font-bold text-emerald-600">AGENT 10 — القماش والتعليق</div>
+                <div className="font-bold text-emerald-600">القماش والتعليق</div>
                 <div>{agent_analysis.upholstery_analysis.summary}</div>
               </div>
               <div className="p-3 rounded-xl bg-ivory-100 dark:bg-navy-800">
-                <div className="font-bold text-emerald-600">AGENT 06 — قناة البيع</div>
+                <div className="font-bold text-emerald-600">قناة البيع والمصدر</div>
                 <div>{agent_analysis.channel_analysis.label_ar}: {agent_analysis.channel_analysis.note}</div>
               </div>
+              {agent_analysis.category_specialist && (
+                <div className="sm:col-span-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <div className="font-bold text-emerald-700 dark:text-emerald-400">معايير الفئة الهندسية</div>
+                  <div>{agent_analysis.category_specialist.technical_note}</div>
+                </div>
+              )}
             </div>
           </div>
 

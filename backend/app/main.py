@@ -16,6 +16,7 @@ from app.adapters.sources import get_all_adapter_statuses
 from app.agents.consultant import build_consultant_response, parse_consultant_intent
 from app.agents.orchestrator import run_product_intelligence_pipeline
 from app.agents.registry import AGENTS_CATALOG
+from app.agents.social_harvester import extract_social_listing_metadata
 from app.agents.verification_trust import analyze_market_pricing
 from app.config import get_settings
 from app.database import (
@@ -115,6 +116,7 @@ async def list_products(
     min_confidence: float | None = None,
     max_distance_km: float | None = None,
     user_wilaya_code: str | None = None,
+    source_platform: str | None = None,
     db: Session = Depends(get_db),
 ):
     rate_limiter.check(request)
@@ -159,6 +161,8 @@ async def list_products(
             continue
         if min_confidence is not None and p.evidence_confidence_score < min_confidence:
             continue
+        if source_platform and source_platform.lower() not in (p.primary_source_name or "").lower():
+            continue
 
         if max_distance_km is not None and user_wilaya_code and user_wilaya_code in WILAYA_BY_CODE:
             uw = WILAYA_BY_CODE[user_wilaya_code]
@@ -176,6 +180,8 @@ async def list_products(
                 p.wood_type or "",
                 p.fabric_type or "",
                 " ".join(p.fabric_properties or []),
+                p.primary_source_name or "",
+                p.seller.name or "",
                 p.seller.wilaya_name or "",
                 p.seller.commune or "",
             ]).lower()
@@ -543,16 +549,26 @@ async def get_audit_logs(request: Request, db: Session = Depends(get_db)):
     return {"items": rows}
 
 
+@app.post("/api/v1/social/extract")
+async def extract_social_post(payload: dict, request: Request):
+    rate_limiter.check(request)
+    raw_text = str(payload.get("text", ""))
+    source_url = str(payload.get("source_url", ""))
+    if source_url:
+        validate_external_url(source_url)
+    return extract_social_listing_metadata(raw_text, source_url)
+
+
 @app.websocket("/ws/search/{job_id}")
 async def ws_search_progress(websocket: WebSocket, job_id: str):
     await websocket.accept()
     stages = [
-        {"agent": "AGENT_00", "progress": 15, "message": "تهيئة المنسق المركزي وتوسيع الكلمات المفتاحية متعددة اللغات..."},
-        {"agent": "AGENT_06", "progress": 35, "message": "فحص المصانع المباشرة والورشات الحرفية..."},
-        {"agent": "AGENT_08", "progress": 55, "message": "تحليل كثافة الرغوة والتمييز بين الموثق والمعلن..."},
-        {"agent": "AGENT_12", "progress": 75, "message": "توحيد الأسعار بالدينار الجزائري وحساب الوسيط السعري..."},
-        {"agent": "AGENT_13", "progress": 90, "message": "استخراج التوليفات المثلى وPareto Front..."},
-        {"agent": "AGENT_15", "progress": 100, "message": "اكتمل التحقق من المصادر والبيانات المفقودة."},
+        {"stage": "توسيع الاستعلام", "progress": 15, "message": "تحليل الكلمات المفتاحية والمرادفات متعددة اللغات..."},
+        {"stage": "فحص المنصات الاجتماعية", "progress": 35, "message": "البحث في فهرس إعلانات فيسبوك، إنستغرام، تيك توك وOuedkniss..."},
+        {"stage": "التحليل الهندسي", "progress": 55, "message": "مطابقة كثافة الرغوة ونوع الخشب ونظام التعليق..."},
+        {"stage": "تحليل الأسعار والتوصيل", "progress": 75, "message": "توحيد الأسعار بالدينار الجزائري وحساب تكلفة التوصيل..."},
+        {"stage": "ترتيب القيمة", "progress": 90, "message": "مقارنة العروض واستخراج أفضل التوليفات المتاحة..."},
+        {"stage": "اكتمال التحقق", "progress": 100, "message": "تم التحقق من المصادر والبيانات المتاحة."},
     ]
     try:
         for st in stages:

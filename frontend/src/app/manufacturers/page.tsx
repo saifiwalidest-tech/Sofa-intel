@@ -15,7 +15,7 @@ export default function ManufacturersPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">دليل المصانع والحرفيين في الجزائر (AGENT 06)</h1>
+      <h1 className="text-2xl font-bold">دليل المصانع والحرفيين في الجزائر (58 ولاية)</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {sellers.map((s) => (
           <div key={s.id} className="rounded-2xl border border-wood-500/25 bg-white dark:bg-navy-900 p-5 space-y-2">

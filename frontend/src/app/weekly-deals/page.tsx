@@ -16,7 +16,7 @@ export default function WeeklyDealsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">أفضل العروض الأسبوعية ونتائج Pareto Front (AGENT 13)</h1>
+        <h1 className="text-2xl font-bold">أفضل العروض الأسبوعية والتوليفات المثلى</h1>
         <p className="text-xs opacity-75">العروض التي لا يتفوق عليها أي عرض آخر في السعر والجودة والموثوقية معاً.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
