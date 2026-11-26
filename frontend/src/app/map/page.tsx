@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { MapPin, Truck } from "lucide-react";
 import { apiFetch, formatDZD } from "@/lib/api";
 
@@ -61,6 +62,12 @@ export default function AlgeriaMapPage() {
               <span className="inline-flex items-center gap-1"><Truck className="w-3.5 h-3.5 text-wood-500" /> توصيل تقديري:</span>
               <strong>{formatDZD(w.estimated_delivery_dzd)} ({w.distance_km} كم)</strong>
             </div>
+            <Link
+              href={`/results?wilaya_code=${w.code}`}
+              className="block text-center rounded-xl bg-navy-900 dark:bg-emerald-600 text-ivory-50 py-1.5 text-xs font-semibold hover:opacity-90"
+            >
+              عرض الموردين والعروض ←
+            </Link>
           </div>
         ))}
       </div>

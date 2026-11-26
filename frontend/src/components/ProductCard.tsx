@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, Scale, MapPin, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { Heart, Scale, MapPin, ShieldAlert, CheckCircle2, ExternalLink } from "lucide-react";
 import { Product, formatDZD } from "@/lib/api";
 import { useApp } from "./AppContext";
 
@@ -36,11 +36,25 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
         </div>
 
-        <div className="flex items-center gap-1.5 text-xs text-navy-700 dark:text-ivory-200">
-          <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-          <span>{product.seller.wilaya_name} ({product.seller.commune})</span>
-          <span className="mx-1">·</span>
-          <span className="text-wood-700 dark:text-wood-300 font-medium">{product.seller.seller_type}</span>
+        <div className="flex items-center justify-between gap-1.5 text-xs text-navy-700 dark:text-ivory-200">
+          <Link
+            href={`/results?wilaya_code=${product.seller.wilaya_code}`}
+            className="inline-flex items-center gap-1 hover:text-emerald-600 transition"
+            title="تصفية حسب هذه الولاية وعرض مورديها"
+          >
+            <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span>{product.seller.wilaya_name} ({product.seller.commune})</span>
+          </Link>
+          <a
+            href={product.source_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-full bg-ivory-100 dark:bg-navy-800 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-400 hover:underline"
+            title={`فتح المصدر الأصلي: ${product.source_url}`}
+          >
+            <ExternalLink className="w-3 h-3" />
+            <span>المصدر</span>
+          </a>
         </div>
 
         <div className="grid grid-cols-2 gap-2 text-xs bg-ivory-100 dark:bg-navy-800/70 rounded-xl p-2.5">
