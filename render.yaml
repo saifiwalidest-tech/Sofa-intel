@@ -1,0 +1,38 @@
+# Render Blueprint for SOFA INTEL DZ
+# Copyright (c) 2026 saifiwalid
+
+services:
+  - type: web
+    name: sofa-intel-dz-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: APP_ENV
+        value: production
+      - key: APP_COPYRIGHT
+        value: saifiwalid
+      - key: ALLOWED_ORIGINS
+        value: "*"
+      - key: LLM_PROVIDER
+        value: local_heuristic
+
+  - type: web
+    name: sofa-intel-dz-frontend
+    runtime: node
+    rootDir: frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start -- -H 0.0.0.0 -p $PORT
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: NEXT_PUBLIC_API_URL
+        value: https://sofa-intel-dz-backend.onrender.com
+      - key: NEXT_PUBLIC_WS_URL
+        value: wss://sofa-intel-dz-backend.onrender.com
