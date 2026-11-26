@@ -171,6 +171,44 @@ def read_public_url(url: str) -> dict:
     }
 
 
+def _extract_dz_phones(text: str) -> list[str]:
+    matches = re.findall(r"(?:\+213|0)\s*[234567]\d(?:[\s.-]*\d{2}){3,4}", text)
+    seen: list[str] = []
+    for m in matches:
+        cleaned = re.sub(r"\s+", " ", m).strip()
+        if cleaned not in seen:
+            seen.append(cleaned)
+    return seen[:3]
+
+
+def discover_wilaya_suppliers(wilaya_code: str, commune: str | None = None, limit: int = 10) -> dict:
+    """Sweep the live internet for real workshops, showrooms, phone numbers, and Google Maps links in a wilaya/commune."""
+    w = WILAYA_BY_CODE.get(wilaya_code)
+    if not w:
+        return {"ok": False, "items": [], "error": {"code": "BAD_INPUT", "message": "Unknown wilaya code"}}
+
+    loc = f"{commune} {w['name_fr']}" if commune else w["name_fr"]
+    query = f"salon canape meuble showroom atelier {loc} algerie telephone"
+    res = search_live_web(query, wilaya_code=wilaya_code, limit=limit)
+    enriched = []
+    for it in res.get("items", []):
+        phones = _extract_dz_phones(f"{it.get('title', '')} {it.get('snippet', '')}")
+        maps_q = quote_plus(f"{it.get('title', '')} {loc} Algeria")
+        enriched.append({
+            **it,
+            "phones": phones,
+            "google_maps_url": f"https://www.google.com/maps/search/?api=1&query={maps_q}",
+        })
+    return {
+        "ok": res.get("ok", False),
+        "wilaya": w,
+        "commune": commune,
+        "google_maps_area_url": f"https://www.google.com/maps/search/?api=1&query={quote_plus(f'fabricant salon canape {loc} Algeria')}",
+        "items": enriched,
+        "error": res.get("error"),
+    }
+
+
 def run_channel_doctor() -> dict:
     """Diagnostic status for all internet & social discovery channels."""
     settings = get_settings()

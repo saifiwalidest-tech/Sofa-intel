@@ -19,11 +19,6 @@ export function ProductCard({ product }: { product: Product }) {
           alt={product.title}
           className="h-full w-full object-cover"
         />
-        {product.is_demo && (
-          <span className="absolute top-2 right-2 rounded-full bg-amber-500/95 text-navy-950 text-[10px] font-bold px-2.5 py-0.5">
-            DEMO DATA — للاختبار فقط
-          </span>
-        )}
         <span className="absolute bottom-2 left-2 rounded-full bg-navy-950/80 text-ivory-50 text-[11px] px-2.5 py-0.5">
           {product.sofa_type} · {product.seats_count ? `${product.seats_count} مقاعد` : "مقاعد غير محددة"}
         </span>

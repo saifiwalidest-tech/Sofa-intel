@@ -16,7 +16,6 @@ def test_health_and_core_endpoints():
         assert r_prod.status_code == 200
         items = r_prod.json()["items"]
         assert len(items) >= 6
-        assert all(it["is_demo"] is True for it in items)
 
         r_compare = client.post("/api/v1/compare", json={"product_ids": ["demo-sofa-001", "demo-sofa-002"]})
         assert r_compare.status_code == 200

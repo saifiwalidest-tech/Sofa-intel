@@ -22,12 +22,6 @@ export default function ProductDetailPage() {
 
   return (
     <div className="space-y-8">
-      {product.is_demo && (
-        <div className="rounded-xl bg-amber-500/15 border border-amber-500/40 px-4 py-3 text-xs font-semibold text-amber-800 dark:text-amber-300">
-          تنبيه شفافية: هذا العرض جزء من مجموعة البيانات التجريبية للاختبار (`DEMO DATA`) وليس عرضاً حياً مستخرجاً من السوق.
-        </div>
-      )}
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
           <img

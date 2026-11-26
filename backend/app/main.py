@@ -50,7 +50,7 @@ from app.services.geo_algeria import WILAYAS, WILAYA_BY_CODE, estimate_delivery_
 from app.services.multilingual_search import expand_multilingual_query
 from app.services.optimizer import classify_tier_recommendations, compute_pareto_front
 from app.services.scoring import compute_product_scores
-from app.services.web_reach import read_public_url, run_channel_doctor, search_live_web
+from app.services.web_reach import discover_wilaya_suppliers, read_public_url, run_channel_doctor, search_live_web
 
 settings = get_settings()
 rate_limiter = InMemoryRateLimiter(settings.api_rate_limit_per_minute)
@@ -442,6 +442,17 @@ async def visual_search(payload: VisualSearchRequest, db: Session = Depends(get_
         "guardrail_note": "المطابقة البصرية تعتمد على الشكل واللون وعدد المقاعد الظاهر ولا تستنتج الكثافة أو الخشب الداخلي.",
         "matches": scored[:6],
     }
+
+
+@app.get("/api/v1/geo/discover-suppliers")
+async def geo_discover_suppliers(
+    request: Request,
+    wilaya_code: str,
+    commune: str | None = None,
+    limit: int = Query(default=10, ge=1, le=15),
+):
+    rate_limiter.check(request)
+    return discover_wilaya_suppliers(wilaya_code=wilaya_code, commune=commune, limit=limit)
 
 
 @app.get("/api/v1/geo/wilayas")
